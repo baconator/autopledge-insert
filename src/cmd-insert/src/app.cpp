@@ -1,6 +1,9 @@
-#include <iostream>
 #include "llvm/Support/CommandLine.h"
+#include <string>
 
-int main() {
-    std::cout << "Hello, world!\n";
+static llvm::cl::opt<bool> BeAwesome("awesome-mode", llvm::cl::desc("Enable super awesome extra feature."),
+                                     llvm::cl::Required);
+
+int main(int argc, char **argv) {
+    llvm::cl::ParseCommandLineOptions(argc, argv);
 }
