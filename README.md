@@ -1,3 +1,6 @@
+# Usage (when it's implemented ...)
+Replace `clang++` or `g++` in your build with `autopledge --quiet`. Instrumented source will be saved alongside the unchanged source as `filename.autopledged.cpp`. Only the instrumented source will be compiled.
+
 # Building
 * `mkdir build`
 * `cd build`
