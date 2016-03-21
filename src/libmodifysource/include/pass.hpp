@@ -4,6 +4,7 @@
 #include "llvm/IR/Module.h"
 #include "llvm/Support/raw_ostream.h"
 #include <map>
+#include <set>
 #include "syscall.hpp"
 
 namespace autopledge {
@@ -13,6 +14,6 @@ namespace autopledge {
 
         bool runOnModule(llvm::Module& m) override { }
 
-        std::map<std::pair<std::string, unsigned int>, autopledge::Syscall> filenameAndLineToConstraints;
+        std::map<std::string, std::set<autopledge::Syscall>> symbolNameToSyscallConstraints;
     };
 }
