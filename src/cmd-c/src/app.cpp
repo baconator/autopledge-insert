@@ -4,7 +4,6 @@
 #include <iostream>
 #include <vector>
 
-/*
 namespace autopledge {
 
     static llvm::cl::opt<bool> Quiet("quiet",
@@ -19,4 +18,4 @@ int main(int argc, char **argv) {
     llvm::cl::ParseCommandLineOptions(argc, argv);
 
 
-}*/
+}
