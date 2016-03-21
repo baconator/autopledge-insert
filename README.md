@@ -1,5 +1,6 @@
-# Usage (when it's implemented ...)
-Replace `clang++` or `g++` in your build with `autopledge --quiet`. Instrumented source will be saved alongside the unchanged source as `filename.autopledged.cpp`. Only the instrumented source will be compiled.
+# Grand Plan
+* Main problem: a number of libraries are linked in and not compiled at once, so information about which syscalls they make is difficult to obtain statically.
+* Solution: Have a mock compiler and linker that instead output syscall-related data, then run the compilation twice (once w/o data, once with).
 
 # Building
 * `mkdir build`
