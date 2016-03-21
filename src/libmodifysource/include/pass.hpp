@@ -9,7 +9,6 @@
 namespace autopledge {
     struct AnnotateSyscalls : public llvm::ModulePass {
         static char ID;
-
         AnnotateSyscalls() : ModulePass(ID) { }
 
         bool runOnModule(llvm::Module& m) override { }
