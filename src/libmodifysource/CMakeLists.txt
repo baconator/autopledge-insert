@@ -5,5 +5,8 @@ file(GLOB libmodifysource_SRC
         )
 
 add_library(libmodifysource STATIC ${libmodifysource_SRC})
+find_package(LLVM REQUIRED CONFIG)
+llvm_map_components_to_libnames(llvm_libs core support)
+target_link_libraries(libmodifysource ${llvm_libs})
 
 target_include_directories(libmodifysource PUBLIC ${PROJECT_SOURCE_DIR}/include)
