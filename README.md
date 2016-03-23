@@ -1,10 +1,10 @@
 # Grand Plan
-* Main problem: a number of libraries are linked in and not compiled at once, so information about which syscalls they make is difficult to obtain statically.
-* Solution: Have a mock compiler and linker that instead output syscall-related data, then run the compilation twice (once w/o data, once with).
+* Use [BEAR](https://github.com/rizsotto/Bear) to generate a compilation database.
+* Run an analysis over that in order to determine what capabilities are used in which symbols.
+* Annotate all implicated files with the computed pledge statements.
 
 # Usage (eventually)
-* On the first compilation, replace compiler calls with `autopledge-c` linker calls with `autopledge-ld`.
-* On the second, replace compiler calls with `autopledge-insert --prerun <FILES HERE>`. This will generate `filename.autopledged.c` files alongside existing source, then compile them as normal.
+* ¯\\\_(ツ)\_/¯ Just discovered bear, so lets just see what arises organically.
 
 # Building
 * `mkdir build`
