@@ -9,4 +9,4 @@ find_package(LLVM REQUIRED CONFIG)
 llvm_map_components_to_libnames(llvm_libs core support)
 target_link_libraries(libannotatesyscalls ${llvm_libs})
 
-target_include_directories(libannotatesyscalls PUBLIC ${PROJECT_SOURCE_DIR}/include)
+target_include_directories(libannotatesyscalls PUBLIC ${PROJECT_SOURCE_DIR}/include ${LLVM_INCLUDE_DIRS})
