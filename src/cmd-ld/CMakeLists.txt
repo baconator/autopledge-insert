@@ -6,4 +6,4 @@ add_executable(cmd-ld ${cmd_ld_SRC})
 find_package(LLVM REQUIRED CONFIG)
 llvm_map_components_to_libnames(llvm_libs support core)
 
-target_link_libraries(cmd-ld libmodifysource ${llvm_libs} libmodernjson)
+target_link_libraries(cmd-ld libannotatesyscalls ${llvm_libs} libmodernjson)

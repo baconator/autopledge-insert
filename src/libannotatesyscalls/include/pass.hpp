@@ -2,6 +2,7 @@
 
 #include "llvm/Pass.h"
 #include "llvm/IR/Module.h"
+#include "llvm/IR/BasicBlock.h"
 #include "llvm/Support/raw_ostream.h"
 #include <map>
 #include <set>
@@ -14,6 +15,8 @@ namespace autopledge {
 
         bool runOnModule(llvm::Module& m) override { }
 
-        std::map<std::string, std::set<autopledge::Syscall>> symbolNameToSyscallConstraints;
+        // TODO: make this less hideously unsafe (i.e. shouldn't rely on pointer identity after a cycle)
+        std::map<llvm::BasicBlock*, std::set<autopledge::Syscall>> basicBlockToSyscallConstraints;
+        std::map<llvm::Function*, std::set<autopledge::Syscall>> functionToSyscallConstraints;
     };
 }
