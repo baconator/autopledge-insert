@@ -7,6 +7,7 @@ file(GLOB libannotatesyscalls_SRC
 add_library(libannotatesyscalls STATIC ${libannotatesyscalls_SRC})
 find_package(LLVM REQUIRED CONFIG)
 llvm_map_components_to_libnames(llvm_libs core support)
+include_directories(${LLVM_INCLUDE_DIRS})
 target_link_libraries(libannotatesyscalls ${llvm_libs})
 
-target_include_directories(libannotatesyscalls PUBLIC ${PROJECT_SOURCE_DIR}/include)
+target_include_directories(libannotatesyscalls PUBLIC include)
