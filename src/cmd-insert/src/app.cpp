@@ -1,18 +1,16 @@
 #include <llvm/Support/CommandLine.h>
 #include <string>
-#include <sstream>
 #include <iostream>
 #include <clang/Tooling/Tooling.h>
 #include <clang/Tooling/CommonOptionsParser.h>
-#include <clang/Frontend/CompilerInstance.h>
-#include <clang/Rewrite/Core/Rewriter.h>
-#include <clang/AST/RecursiveASTVisitor.h>
-#include "actions.cpp"
+#include "actions.hpp"
+
+static llvm::cl::OptionCategory AutopledgeInsertCategory("autopledge-insert options");
 
 int main(int argc, const char **argv) {
     /*llvm::cl::ParseCommandLineOptions(argc, argv);*/
 
-    clang::tooling::CommonOptionsParser optionsParser(argc, argv, autopledge::AutopledgeInsertCategory);
+    clang::tooling::CommonOptionsParser optionsParser(argc, argv, AutopledgeInsertCategory);
     std::vector<std::string> v;
     clang::tooling::ClangTool tool(optionsParser.getCompilations(), optionsParser.getSourcePathList());
 
@@ -21,8 +19,8 @@ int main(int argc, const char **argv) {
 
     auto& sourceManager = autopledge::rewriter.getSourceMgr();
     auto mainFileId = sourceManager.getMainFileID();
-    auto& rewriter = autopledge::rewriter;
-    auto& editBuffer = rewriter.buffer_begin()->second;
+    auto& rw = autopledge::rewriter;
+    auto& editBuffer = rw.buffer_begin()->second;
     editBuffer.write(llvm::errs());
 
     return result;
