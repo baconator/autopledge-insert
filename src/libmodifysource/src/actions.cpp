@@ -7,15 +7,15 @@ namespace autopledge {
         llvm::outs() << "SET THE REWRITER SOURCE MANAGER\n";
         auto& sourceManager = astContext.getSourceManager();
         auto& langOpts = astContext.getLangOpts();
-        rewriter = clang::Rewriter(sourceManager, langOpts);
+        /*rewriter = clang::Rewriter(sourceManager, langOpts);*/
     }
 
     bool ExampleVisitor::VisitFunctionDecl(clang::FunctionDecl *func) {
         llvm::outs() << "HIT VISIT DECL\n";
-        numFunctions++;
+        /*numFunctions++;*/
         auto funcName = func->getNameInfo().getName().getAsString();
         if (funcName == "do_math") {
-            rewriter.ReplaceText(func->getLocation(), funcName.length(), "add5");
+            /*rewriter.ReplaceText(func->getLocation(), funcName.length(), "add5");*/
             llvm::errs() << "** Rewrote function def: " << funcName << "\n";
         }
         return true;
@@ -24,11 +24,11 @@ namespace autopledge {
     bool ExampleVisitor::VisitStmt(clang::Stmt *st) {
         llvm::outs() << "HIT VISIT STMT\n";
         if (auto *ret = llvm::dyn_cast<clang::ReturnStmt>(st)) {
-            rewriter.ReplaceText(ret->getRetValue()->getLocStart(), 6, "val");
+            /*rewriter.ReplaceText(ret->getRetValue()->getLocStart(), 6, "val");*/
             llvm::errs() << "** Rewrote ReturnStmt\n";
         }
         if (auto *call = llvm::dyn_cast<clang::CallExpr>(st)) {
-            rewriter.ReplaceText(call->getLocStart(), 7, "add5");
+            /*rewriter.ReplaceText(call->getLocStart(), 7, "add5");*/
             llvm::errs() << "** Rewrote function call\n";
         }
         return true;

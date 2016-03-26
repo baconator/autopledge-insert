@@ -7,8 +7,8 @@
 #include <clang/AST/RecursiveASTVisitor.h>
 
 namespace autopledge {
-    clang::Rewriter rewriter;
-    int numFunctions = 0;
+    /*clang::Rewriter rewriter;
+    int numFunctions = 0;*/
 
     struct ExampleVisitor : public clang::RecursiveASTVisitor<ExampleVisitor> {
         clang::ASTContext& astContext;
