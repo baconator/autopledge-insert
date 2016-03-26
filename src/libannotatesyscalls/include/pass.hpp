@@ -13,7 +13,7 @@ namespace autopledge {
         static char ID;
         AnnotateSyscalls() : ModulePass(ID) { }
 
-        bool runOnModule(llvm::Module& m) override { }
+        bool runOnModule(llvm::Module& m) override;
 
         // TODO: make this less hideously unsafe (i.e. shouldn't rely on pointer identity after a cycle)
         std::map<llvm::BasicBlock*, std::set<autopledge::Syscall>> basicBlockToSyscallConstraints;
