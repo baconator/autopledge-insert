@@ -31,6 +31,28 @@ namespace autopledge {
                                   astContext.getLangOpts());
         }
 
+        virtual bool VisitFunctionDecl(clang::FunctionDecl *func) {
+            numFunctions++;
+            auto funcName = func->getNameInfo().getName().getAsString();
+            if (funcName == "do_math") {
+                rewriter.ReplaceText(func->getLocation(), funcName.length(), "add5");
+                llvm::errs() << "** Rewrote function def: " << funcName << "\n";
+            }
+            return true;
+        }
+
+        virtual bool VisitStmt(clang::Stmt *st) {
+            if (auto *ret = llvm::dyn_cast<clang::ReturnStmt>(st)) {
+                rewriter.ReplaceText(ret->getRetValue()->getLocStart(), 6, "val");
+                llvm::errs() << "** Rewrote ReturnStmt\n";
+            }
+            if (auto *call = llvm::dyn_cast<clang::CallExpr>(st)) {
+                rewriter.ReplaceText(call->getLocStart(), 7, "add5");
+                llvm::errs() << "** Rewrote function call\n";
+            }
+            return true;
+        }
+
     };
 
     struct ExampleASTConsumer : public clang::ASTConsumer {
