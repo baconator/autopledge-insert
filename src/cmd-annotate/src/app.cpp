@@ -39,8 +39,6 @@ namespace {
 }
 
 int main(int argc, const char **argv) {
-    llvm::cl::ParseCommandLineOptions(argc, argv);
-
     sys::PrintStackTraceOnErrorSignal();
     llvm::PrettyStackTraceProgram X{argc, argv};
     llvm_shutdown_obj shutdown;
@@ -57,8 +55,7 @@ int main(int argc, const char **argv) {
         return -1;
     }
 
-    // Build up all of the passes that we want to run on the module.
     PassManager pm;
-//    pm.add(new callgraphs::CallGraphPass);
+    pm.add(new autopledge::AnnotateSyscalls());
     pm.run(*module);
 }
