@@ -2,7 +2,6 @@
 #include <string>
 #include <sstream>
 #include <iostream>
-#include <vector>
 #include <clang/Tooling/Tooling.h>
 #include <clang/Tooling/CommonOptionsParser.h>
 #include <clang/Frontend/CompilerInstance.h>

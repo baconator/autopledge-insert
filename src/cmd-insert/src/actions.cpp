@@ -1,11 +1,17 @@
 #pragma once
 
+#include <clang/Tooling/Tooling.h>
+#include <clang/Tooling/CommonOptionsParser.h>
+#include <clang/Frontend/CompilerInstance.h>
+#include <clang/Rewrite/Core/Rewriter.h>
+#include <clang/AST/RecursiveASTVisitor.h>
+
 namespace autopledge {
     // TODO: handle arbitrary input for handoff to compiler.
     /*static llvm::cl::opt<std::string> Files( "input",
                                              llvm::cl::desc("[<file>,...]"));*/
 
-    static llvm::cl::OptionCategory AutopledgeInsertCategory("autopledge-insert options");
+    /*static llvm::cl::OptionCategory AutopledgeInsertCategory("autopledge-insert options");*/
 
 
     clang::Rewriter rewriter;
