@@ -7,8 +7,8 @@
 #include "actions.hpp"
 
 int main(int argc, const char **argv) {
-    std::ifstream t(argv[1]);
-    std::string str((std::istreambuf_iterator<char>(t)),
+    std::ifstream sourceFile(argv[1]);
+    std::string str((std::istreambuf_iterator<char>(sourceFile)),
                     std::istreambuf_iterator<char>());
 
     autopledge::ExampleActionOutput result;

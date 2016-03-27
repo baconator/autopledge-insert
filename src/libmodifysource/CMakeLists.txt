@@ -4,10 +4,13 @@ file(GLOB modifysource_SRC
         "${PROJECT_SOURCE_DIR}/src/*.cpp"
         )
 
-add_library(modifysource STATIC ${modifysource_SRC})
+file(GLOB modifysource_INCLUDE
+        "${PROJECT_SOURCE_DIR}/include/*.hpp"
+        )
+
+add_library(modifysource STATIC ${modifysource_SRC} ${modifysource_INCLUDE})
 
 find_package(LLVM REQUIRED CONFIG)
-#llvm_map_components_to_libnames(llvm_libs core support)
 
 find_package(clang REQUIRED)
 target_link_libraries(modifysource PRIVATE clangTooling)
