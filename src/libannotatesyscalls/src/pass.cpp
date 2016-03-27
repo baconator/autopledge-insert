@@ -3,6 +3,7 @@
 
 
 using namespace llvm;
+using namespace std;
 
 static const Function *getCalledFunction(const CallSite cs) {
     if (!cs.getInstruction()) {
@@ -16,6 +17,17 @@ static const Function *getCalledFunction(const CallSite cs) {
 namespace autopledge {
     char autopledge::AnnotateSyscalls::ID = 0;
 
+    void autopledge::AnnotateSyscalls::insertToBBMapSet(llvm::BasicBlock* key, autopledge::Syscall value) {
+        auto bbSet = basicBlockToSyscallConstraints.find(key);
+        if (bbSet == basicBlockToSyscallConstraints.end()) {
+            std::set<autopledge::Syscall> s;
+            s.insert(value);
+            basicBlockToSyscallConstraints.insert(std::make_pair(key, s));
+        } else {
+            bbSet->second.insert(value);
+        }
+    };
+
     bool autopledge::AnnotateSyscalls::runOnModule(llvm::Module &m) {
         for (auto &f : m) {
             llvm::outs() << f.getName() << "\n";
@@ -28,12 +40,20 @@ namespace autopledge {
                     }
                     auto syscallType = Syscall::getSyscallType(fun->getName());
                     if (syscallType != SyscallType::NOT_SYSCALL) {
-//                        basicBlockToSyscallConstraints[bb] = Syscall(syscallType);
+                        insertToBBMapSet(&bb, Syscall(syscallType));
                         llvm::outs() << "\t " << fun->getName() << "\n";
                     }
                 }
             }
         }
-        return false;
+        for(auto it = basicBlockToSyscallConstraints.begin(); it != basicBlockToSyscallConstraints.end(); ++it)
+        {
+            outs() << it->first << "\t{";
+            for (auto i = it->second.begin(); i != it->second.end(); i++) {
+                outs() << i->type << ", ";
+            }
+            outs() << "}\n";
+        }
+        return true;
     }
 }

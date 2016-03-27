@@ -12,4 +12,9 @@ namespace autopledge {
         Syscall(SyscallType type);
         static SyscallType getSyscallType(llvm::StringRef);
     };
+
+    inline bool operator<(const Syscall& lhs, const Syscall& rhs)
+    {
+        return lhs.type < rhs.type;
+    }
 }
