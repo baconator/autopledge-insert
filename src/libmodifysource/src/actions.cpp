@@ -5,8 +5,8 @@ namespace autopledge {
             : astContext(CI->getASTContext()), result(result) // initialize private members
     {
         llvm::outs() << "SET THE REWRITER SOURCE MANAGER\n";
-        auto& sourceManager = astContext.getSourceManager();
-        auto& langOpts = astContext.getLangOpts();
+        auto &sourceManager = astContext.getSourceManager();
+        auto &langOpts = astContext.getLangOpts();
         result.rewriter = clang::Rewriter(sourceManager, langOpts);
     }
 
@@ -34,7 +34,8 @@ namespace autopledge {
         return true;
     }
 
-    ExampleASTConsumer::ExampleASTConsumer(clang::CompilerInstance *CI, ExampleActionOutput &result) : visitor(new ExampleVisitor(CI, result)), result(result) { }
+    ExampleASTConsumer::ExampleASTConsumer(clang::CompilerInstance *CI, ExampleActionOutput &result) : visitor(
+            new ExampleVisitor(CI, result)), result(result) { }
 
     bool ExampleASTConsumer::HandleTopLevelDecl(clang::DeclGroupRef DG) {
         // a DeclGroupRef may have multiple Decls, so we iterate through each one
@@ -45,9 +46,11 @@ namespace autopledge {
         return true;
     }
 
-    std::unique_ptr<clang::ASTConsumer> ExampleFrontendAction::CreateASTConsumer(clang::CompilerInstance& CI,
-                                                                                           StringRef file) {
+    std::unique_ptr<clang::ASTConsumer> ExampleFrontendAction::CreateASTConsumer(clang::CompilerInstance &CI,
+                                                                                 StringRef file) {
         llvm::outs() << "HIT AN EXAMPLE FRONTEND ACTION\n";
         return std::make_unique<autopledge::ExampleASTConsumer>(&CI, result); // pass CI pointer to ASTConsumer
     }
+
+    ExampleFrontendAction::ExampleFrontendAction(ExampleActionOutput &result) : result(result) { }
 }
