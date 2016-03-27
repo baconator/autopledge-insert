@@ -1,24 +1,23 @@
 #include <llvm/Support/CommandLine.h>
 #include <string>
-#include <sstream>
 #include <iostream>
-#include <vector>
+#include <fstream>
 #include <clang/Tooling/Tooling.h>
 #include <clang/Tooling/CommonOptionsParser.h>
-
-namespace autopledge {
-    // TODO: handle arbitrary input for handoff to compiler.
-    static llvm::cl::list<std::string> Files(llvm::cl::Positional,
-                                               llvm::cl::desc("[<file>,...]"),
-                                               llvm::cl::OneOrMore);
-
-    static llvm::cl::OptionCategory AutopledgeInsertCategory("autopledge-insert options");
-}
+#include "actions.hpp"
 
 int main(int argc, const char **argv) {
-    llvm::cl::ParseCommandLineOptions(argc, argv);
+    std::ifstream t(argv[1]);
+    std::string str((std::istreambuf_iterator<char>(t)),
+                    std::istreambuf_iterator<char>());
 
-    clang::tooling::CommonOptionsParser optionsParser(argc, argv, autopledge::AutopledgeInsertCategory);
-    clang::tooling::ClangTool tool(optionsParser.getCompilations(), autopledge::Files);
+    autopledge::ExampleActionOutput result;
+    auto action = new autopledge::ExampleFrontendAction(result);
+    clang::tooling::runToolOnCode(action, str, argv[1]);
 
+    auto& rw = result.rewriter;
+    auto& editBuffer = rw.buffer_begin()->second;
+    editBuffer.write(llvm::errs());
+
+    return 1;
 }
