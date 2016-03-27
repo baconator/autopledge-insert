@@ -4,7 +4,7 @@ file(GLOB modifysource_SRC
         "${PROJECT_SOURCE_DIR}/src/*.cpp"
         )
 
-add_library(modifysource SHARED ${modifysource_SRC})
+add_library(modifysource STATIC ${modifysource_SRC})
 
 target_compile_options(modifysource PUBLIC --std=c++1z)
 
@@ -12,8 +12,8 @@ find_package(LLVM REQUIRED CONFIG)
 #llvm_map_components_to_libnames(llvm_libs core support)
 
 find_package(clang REQUIRED)
-target_link_libraries(modifysource clangTooling)
+target_link_libraries(modifysource PRIVATE clangTooling)
 
 
 
-target_include_directories(modifysource PUBLIC ${PROJECT_SOURCE_DIR}/include ${LLVM_INCLUDE_DIRS})
+target_include_directories(modifysource PUBLIC ${PROJECT_SOURCE_DIR}/include ${CLANG_INCLUDE_DIRS})
