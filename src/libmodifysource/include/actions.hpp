@@ -6,13 +6,16 @@
 #include <clang/AST/RecursiveASTVisitor.h>
 
 namespace autopledge {
-    /*clang::Rewriter rewriter;
-    int numFunctions = 0;*/
+    struct ExampleActionOutput {
+        clang::Rewriter rewriter;
+        int numFunctions = 0;
+    };
 
     struct ExampleVisitor : public clang::RecursiveASTVisitor<ExampleVisitor> {
         clang::ASTContext& astContext;
+        ExampleActionOutput &result;
 
-        ExampleVisitor(clang::CompilerInstance *CI);
+        ExampleVisitor(clang::CompilerInstance *CI, ExampleActionOutput &result);
 
         virtual bool VisitFunctionDecl(clang::FunctionDecl *func);
 
@@ -22,13 +25,17 @@ namespace autopledge {
 
     struct ExampleASTConsumer : public clang::ASTConsumer {
         ExampleVisitor *visitor;
+        ExampleActionOutput &result;
 
-        ExampleASTConsumer(clang::CompilerInstance *CI);
+        ExampleASTConsumer(clang::CompilerInstance *CI, ExampleActionOutput &result);
 
         virtual bool HandleTopLevelDecl(clang::DeclGroupRef DG);
     };
 
     struct ExampleFrontendAction : public clang::ASTFrontendAction {
+        ExampleActionOutput result;
         virtual std::unique_ptr <clang::ASTConsumer> CreateASTConsumer(clang::CompilerInstance& CI, StringRef file);
     };
+
+
 }
