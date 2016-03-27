@@ -9,4 +9,4 @@ find_package(LLVM REQUIRED CONFIG)
 
 #find_package(clang REQUIRED)
 
-target_link_libraries(cmd-insert libannotatesyscalls libmodifysource #[[${llvm_libs} clangTooling]])
+target_link_libraries(cmd-insert libannotatesyscalls modifysource #[[${llvm_libs} clangTooling]])
