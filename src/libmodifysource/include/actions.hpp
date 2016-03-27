@@ -6,15 +6,15 @@
 #include <clang/AST/RecursiveASTVisitor.h>
 
 namespace autopledge {
-    struct ExampleActionOutput {
-        ExampleActionOutput(const ExampleActionOutput& o) = delete;
-        ExampleActionOutput(){}
+    struct InsertPledgesResult {
+        InsertPledgesResult(const InsertPledgesResult& o) = delete;
+        InsertPledgesResult(){}
         clang::Rewriter rewriter;
         int numFunctions = 0;
     };
 
-    struct ExampleVisitor : public clang::RecursiveASTVisitor<ExampleVisitor> {
-        ExampleVisitor(clang::CompilerInstance *CI, ExampleActionOutput &result);
+    struct InsertPledgesVisitor : public clang::RecursiveASTVisitor<InsertPledgesVisitor> {
+        InsertPledgesVisitor(clang::CompilerInstance *CI, InsertPledgesResult &result);
 
         virtual bool VisitFunctionDecl(clang::FunctionDecl *func);
 
@@ -22,25 +22,25 @@ namespace autopledge {
 
     private:
         clang::ASTContext& astContext;
-        ExampleActionOutput &result;
+        InsertPledgesResult &result;
     };
 
-    struct ExampleASTConsumer : public clang::ASTConsumer {
-        ExampleASTConsumer(clang::CompilerInstance *CI, ExampleActionOutput &result);
+    struct InsertPledgesConsumer : public clang::ASTConsumer {
+        InsertPledgesConsumer(clang::CompilerInstance *CI, InsertPledgesResult &result);
 
         virtual bool HandleTopLevelDecl(clang::DeclGroupRef DG);
 
     private:
-        ExampleVisitor *visitor;
-        ExampleActionOutput &result;
+        InsertPledgesVisitor *visitor;
+        InsertPledgesResult &result;
     };
 
-    struct ExampleFrontendAction : public clang::ASTFrontendAction {
-        ExampleFrontendAction(ExampleActionOutput &result);
+    struct InsertPledges : public clang::ASTFrontendAction {
+        InsertPledges(InsertPledgesResult &result);
         virtual std::unique_ptr <clang::ASTConsumer> CreateASTConsumer(clang::CompilerInstance& CI, StringRef file);
 
     private:
-        ExampleActionOutput &result;
+        InsertPledgesResult &result;
     };
 
 

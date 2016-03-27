@@ -1,7 +1,7 @@
 #include "actions.hpp"
 
 namespace autopledge {
-    ExampleVisitor::ExampleVisitor(clang::CompilerInstance *CI, ExampleActionOutput &result)
+    InsertPledgesVisitor::InsertPledgesVisitor(clang::CompilerInstance *CI, InsertPledgesResult &result)
             : astContext(CI->getASTContext()), result(result) // initialize private members
     {
         llvm::outs() << "SET THE REWRITER SOURCE MANAGER\n";
@@ -10,7 +10,7 @@ namespace autopledge {
         result.rewriter = clang::Rewriter(sourceManager, langOpts);
     }
 
-    bool ExampleVisitor::VisitFunctionDecl(clang::FunctionDecl *func) {
+    bool InsertPledgesVisitor::VisitFunctionDecl(clang::FunctionDecl *func) {
         llvm::outs() << "HIT VISIT DECL\n";
         result.numFunctions++;
         auto funcName = func->getNameInfo().getName().getAsString();
@@ -21,7 +21,7 @@ namespace autopledge {
         return true;
     }
 
-    bool ExampleVisitor::VisitStmt(clang::Stmt *st) {
+    bool InsertPledgesVisitor::VisitStmt(clang::Stmt *st) {
         llvm::outs() << "HIT VISIT STMT\n";
         if (auto *ret = llvm::dyn_cast<clang::ReturnStmt>(st)) {
             result.rewriter.ReplaceText(ret->getRetValue()->getLocStart(), 6, "val");
@@ -34,10 +34,10 @@ namespace autopledge {
         return true;
     }
 
-    ExampleASTConsumer::ExampleASTConsumer(clang::CompilerInstance *CI, ExampleActionOutput &result) : visitor(
-            new ExampleVisitor(CI, result)), result(result) { }
+    InsertPledgesConsumer::InsertPledgesConsumer(clang::CompilerInstance *CI, InsertPledgesResult &result) : visitor(
+            new InsertPledgesVisitor(CI, result)), result(result) { }
 
-    bool ExampleASTConsumer::HandleTopLevelDecl(clang::DeclGroupRef DG) {
+    bool InsertPledgesConsumer::HandleTopLevelDecl(clang::DeclGroupRef DG) {
         // a DeclGroupRef may have multiple Decls, so we iterate through each one
         llvm::outs() << "HIT HANDLE DECL WHATEVER\n";
         for (auto D : DG) {
@@ -46,11 +46,11 @@ namespace autopledge {
         return true;
     }
 
-    std::unique_ptr<clang::ASTConsumer> ExampleFrontendAction::CreateASTConsumer(clang::CompilerInstance &CI,
+    std::unique_ptr<clang::ASTConsumer> InsertPledges::CreateASTConsumer(clang::CompilerInstance &CI,
                                                                                  StringRef file) {
         llvm::outs() << "HIT AN EXAMPLE FRONTEND ACTION\n";
-        return std::make_unique<autopledge::ExampleASTConsumer>(&CI, result); // pass CI pointer to ASTConsumer
+        return std::make_unique<autopledge::InsertPledgesConsumer>(&CI, result); // pass CI pointer to ASTConsumer
     }
 
-    ExampleFrontendAction::ExampleFrontendAction(ExampleActionOutput &result) : result(result) { }
+    InsertPledges::InsertPledges(InsertPledgesResult &result) : result(result) { }
 }
