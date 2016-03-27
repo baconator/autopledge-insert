@@ -6,6 +6,9 @@
 # Usage (eventually)
 * ¯\\\_(ツ)\_/¯ Just discovered bear, so lets just see what arises organically.
 
+# Requirements (MSYS2)
+* (all prefixed w/mingw-w64-x86_64-) clang, clang-tools-extra, cmake, extra-cmake-modules, gdb, make, lld
+
 # Building
 * `mkdir build`
 * `cd build`
