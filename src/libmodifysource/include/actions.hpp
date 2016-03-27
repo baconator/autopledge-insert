@@ -6,15 +6,15 @@
 #include <clang/AST/RecursiveASTVisitor.h>
 
 namespace autopledge {
-    struct InsertPledgesResult {
-        InsertPledgesResult(const InsertPledgesResult& o) = delete;
-        InsertPledgesResult(){}
+    struct InsertPledgesState {
+        InsertPledgesState(const InsertPledgesState& o) = delete;
+        InsertPledgesState(){}
         clang::Rewriter rewriter;
         int numFunctions = 0;
     };
 
     struct InsertPledgesVisitor : public clang::RecursiveASTVisitor<InsertPledgesVisitor> {
-        InsertPledgesVisitor(clang::CompilerInstance *CI, InsertPledgesResult &result);
+        InsertPledgesVisitor(clang::CompilerInstance *CI, InsertPledgesState &result);
 
         virtual bool VisitFunctionDecl(clang::FunctionDecl *func);
 
@@ -22,25 +22,25 @@ namespace autopledge {
 
     private:
         clang::ASTContext& astContext;
-        InsertPledgesResult &result;
+        InsertPledgesState &state;
     };
 
     struct InsertPledgesConsumer : public clang::ASTConsumer {
-        InsertPledgesConsumer(clang::CompilerInstance *CI, InsertPledgesResult &result);
+        InsertPledgesConsumer(clang::CompilerInstance *CI, InsertPledgesState &result);
 
         virtual bool HandleTopLevelDecl(clang::DeclGroupRef DG);
 
     private:
         InsertPledgesVisitor *visitor;
-        InsertPledgesResult &result;
+        InsertPledgesState &state;
     };
 
     struct InsertPledges : public clang::ASTFrontendAction {
-        InsertPledges(InsertPledgesResult &result);
+        InsertPledges(InsertPledgesState &result);
         virtual std::unique_ptr <clang::ASTConsumer> CreateASTConsumer(clang::CompilerInstance& CI, StringRef file);
 
     private:
-        InsertPledgesResult &result;
+        InsertPledgesState &state;
     };
 
 

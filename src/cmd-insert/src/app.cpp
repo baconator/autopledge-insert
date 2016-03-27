@@ -11,7 +11,7 @@ int main(int argc, const char **argv) {
     std::string str((std::istreambuf_iterator<char>(sourceFile)),
                     std::istreambuf_iterator<char>());
 
-    autopledge::InsertPledgesResult result;
+    autopledge::InsertPledgesState result;
     auto action = new autopledge::InsertPledges(result);
     clang::tooling::runToolOnCode(action, str, argv[1]);
 

@@ -1,8 +1,8 @@
 #include "actions.hpp"
 
 namespace autopledge {
-    InsertPledgesVisitor::InsertPledgesVisitor(clang::CompilerInstance *CI, InsertPledgesResult &result)
-            : astContext(CI->getASTContext()), result(result) // initialize private members
+    InsertPledgesVisitor::InsertPledgesVisitor(clang::CompilerInstance *CI, InsertPledgesState &result)
+            : astContext(CI->getASTContext()), state(result) // initialize private members
     {
         llvm::outs() << "SET THE REWRITER SOURCE MANAGER\n";
         auto &sourceManager = astContext.getSourceManager();
@@ -12,10 +12,10 @@ namespace autopledge {
 
     bool InsertPledgesVisitor::VisitFunctionDecl(clang::FunctionDecl *func) {
         llvm::outs() << "HIT VISIT DECL\n";
-        result.numFunctions++;
+        state.numFunctions++;
         auto funcName = func->getNameInfo().getName().getAsString();
         if (funcName == "do_math") {
-            result.rewriter.ReplaceText(func->getLocation(), funcName.length(), "add5");
+            state.rewriter.ReplaceText(func->getLocation(), funcName.length(), "add5");
             llvm::errs() << "** Rewrote function def: " << funcName << "\n";
         }
         return true;
@@ -24,18 +24,18 @@ namespace autopledge {
     bool InsertPledgesVisitor::VisitStmt(clang::Stmt *st) {
         llvm::outs() << "HIT VISIT STMT\n";
         if (auto *ret = llvm::dyn_cast<clang::ReturnStmt>(st)) {
-            result.rewriter.ReplaceText(ret->getRetValue()->getLocStart(), 6, "val");
+            state.rewriter.ReplaceText(ret->getRetValue()->getLocStart(), 6, "val");
             llvm::errs() << "** Rewrote ReturnStmt\n";
         }
         if (auto *call = llvm::dyn_cast<clang::CallExpr>(st)) {
-            result.rewriter.ReplaceText(call->getLocStart(), 7, "add5");
+            state.rewriter.ReplaceText(call->getLocStart(), 7, "add5");
             llvm::errs() << "** Rewrote function call\n";
         }
         return true;
     }
 
-    InsertPledgesConsumer::InsertPledgesConsumer(clang::CompilerInstance *CI, InsertPledgesResult &result) : visitor(
-            new InsertPledgesVisitor(CI, result)), result(result) { }
+    InsertPledgesConsumer::InsertPledgesConsumer(clang::CompilerInstance *CI, InsertPledgesState &result) : visitor(
+            new InsertPledgesVisitor(CI, result)), state(result) { }
 
     bool InsertPledgesConsumer::HandleTopLevelDecl(clang::DeclGroupRef DG) {
         // a DeclGroupRef may have multiple Decls, so we iterate through each one
@@ -49,8 +49,8 @@ namespace autopledge {
     std::unique_ptr<clang::ASTConsumer> InsertPledges::CreateASTConsumer(clang::CompilerInstance &CI,
                                                                                  StringRef file) {
         llvm::outs() << "HIT AN EXAMPLE FRONTEND ACTION\n";
-        return std::make_unique<autopledge::InsertPledgesConsumer>(&CI, result); // pass CI pointer to ASTConsumer
+        return std::make_unique<autopledge::InsertPledgesConsumer>(&CI, state); // pass CI pointer to ASTConsumer
     }
 
-    InsertPledges::InsertPledges(InsertPledgesResult &result) : result(result) { }
+    InsertPledges::InsertPledges(InsertPledgesState &result) : state(result) { }
 }
