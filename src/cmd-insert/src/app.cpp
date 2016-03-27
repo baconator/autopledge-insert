@@ -8,7 +8,7 @@
 static llvm::cl::OptionCategory AutopledgeInsertCategory("autopledge-insert options");
 
 int main(int argc, const char **argv) {
-    /*llvm::cl::ParseCommandLineOptions(argc, argv);*/
+    llvm::cl::ParseCommandLineOptions(argc, argv);
 
     clang::tooling::CommonOptionsParser optionsParser(argc, argv, AutopledgeInsertCategory);
     std::vector<std::string> v;
@@ -18,8 +18,8 @@ int main(int argc, const char **argv) {
     int result = tool.run(action.get());
 
     /*auto& sourceManager = autopledge::rewriter.getSourceMgr();
-    auto mainFileId = sourceManager.getMainFileID();*/
-    /*auto& rw = autopledge::rewriter;
+    auto mainFileId = sourceManager.getMainFileID();
+    auto& rw = autopledge::rewriter;
     auto& editBuffer = rw.buffer_begin()->second;
     editBuffer.write(llvm::errs());*/
 

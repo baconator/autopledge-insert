@@ -1,7 +1,6 @@
 #pragma once
 
 #include <clang/Tooling/Tooling.h>
-#include <clang/Tooling/CommonOptionsParser.h>
 #include <clang/Frontend/CompilerInstance.h>
 #include <clang/Rewrite/Core/Rewriter.h>
 #include <clang/AST/RecursiveASTVisitor.h>

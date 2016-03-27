@@ -2,10 +2,11 @@ file(GLOB cmd_insert_SRC
   "src/*.cpp"
 )
 add_executable(cmd-insert ${cmd_insert_SRC})
+target_compile_options(cmd-insert PUBLIC --std=c++1z)
 
 find_package(LLVM REQUIRED CONFIG)
-llvm_map_components_to_libnames(llvm_libs support core)
+#llvm_map_components_to_libnames(llvm_libs support core)
 
-find_package(clang REQUIRED)
+#find_package(clang REQUIRED)
 
-target_link_libraries(cmd-insert libannotatesyscalls libmodifysource ${llvm_libs} clangTooling)
+target_link_libraries(cmd-insert libannotatesyscalls libmodifysource #[[${llvm_libs} clangTooling]])

@@ -4,7 +4,5 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D__STDC_LIMIT_MACROS -D__STDC_CONSTANT_
 
 add_subdirectory(libs)
 add_subdirectory(cmd-insert)
-add_subdirectory(cmd-c)
-add_subdirectory(cmd-ld)
 add_subdirectory(libannotatesyscalls)
 add_subdirectory(libmodifysource)
