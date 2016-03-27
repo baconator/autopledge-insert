@@ -12,6 +12,9 @@ namespace autopledge {
 
     bool InsertPledgesVisitor::VisitFunctionDecl(clang::FunctionDecl *func) {
         llvm::outs() << "HIT VISIT DECL\n";
+        auto funcBody = func->getBody();
+        auto sourceCfg = clang::CFG::buildCFG(func, funcBody, &astContext, clang::CFG::BuildOptions());
+
         state.numFunctions++;
         auto funcName = func->getNameInfo().getName().getAsString();
         if (funcName == "do_math") {

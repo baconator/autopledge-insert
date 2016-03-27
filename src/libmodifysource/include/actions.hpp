@@ -4,6 +4,7 @@
 #include <clang/Frontend/CompilerInstance.h>
 #include <clang/Rewrite/Core/Rewriter.h>
 #include <clang/AST/RecursiveASTVisitor.h>
+#include <clang/Analysis/CFG.h>
 
 namespace autopledge {
     struct InsertPledgesState {
