@@ -61,14 +61,22 @@ public:
 namespace autopledge {
     char autopledge::AnnotateSyscalls::ID = 0;
 
-    void autopledge::AnnotateSyscalls::insertToBBMapSet(llvm::BasicBlock* key, autopledge::Syscall value) {
-        auto bbSet = basicBlockToSyscallConstraints.find(key);
-        if (bbSet == basicBlockToSyscallConstraints.end()) {
-            std::set<autopledge::Syscall> s;
-            s.insert(value);
-            basicBlockToSyscallConstraints.insert(std::make_pair(key, s));
+    void autopledge::AnnotateSyscalls::insertToMapSets(llvm::Instruction* key, autopledge::Syscall value) {
+        auto bb = key->getParent();
+        auto function = bb->getParent();
+        auto bbSetItem = basicBlockToSyscallConstraints.find(bb);
+        auto functionSetItem = functionToSyscallConstraints.find(function);
+        std::set<autopledge::Syscall> s; s.insert(value);
+
+        if (bbSetItem == basicBlockToSyscallConstraints.end()) {
+            basicBlockToSyscallConstraints.insert(std::make_pair(bb, s));
         } else {
-            bbSet->second.insert(value);
+            bbSetItem->second.insert(value);
+        }
+        if (functionSetItem == functionToSyscallConstraints.end()) {
+            functionToSyscallConstraints.insert(std::make_pair(function, s));
+        } else {
+            functionSetItem->second.insert(value);
         }
     };
 
@@ -157,27 +165,35 @@ namespace autopledge {
                 work.add(Succ);
             }
         }
-        for(auto it = abstractState.begin(); it != abstractState.end(); ++it)
-        {
-            outs() << "i:" << it->first << ", bb:" << it->first->getParent() << ", f:" << it->first->getParent()->getParent()->getName() << "\t";
-            for (auto i = it->second.first.begin(); i != it->second.first.end(); i++) {
-                outs() << "i:" << i->first << "{";
-                for (auto j = i->second.begin(); j != i->second.end(); j++) {
-                    outs() << j->type << ", ";
-                }
-                outs() << "}";
-
-            }
-            outs() << "\n";
-        }
+//        for(auto it = abstractState.begin(); it != abstractState.end(); ++it)
+//        {
+//            outs() << "i:" << it->first << ", bb:" << it->first->getParent() << ", f:" << it->first->getParent()->getParent()->getName() << "\t";
+//            for (auto i = it->second.first.begin(); i != it->second.first.end(); i++) {
+//                outs() << "i:" << i->first << "{";
+//                for (auto j = i->second.begin(); j != i->second.end(); j++) {
+//                    outs() << j->type << ", ";
+//                }
+//                outs() << "}";
+//
+//            }
+//            outs() << "\n";
+//        }
         return abstractState;
     }
-
 
     bool autopledge::AnnotateSyscalls::runOnModule(llvm::Module &m) {
         for (auto &f : m) {
             if (f.getName().equals("main")) {
-                computeSyscallState(f);
+                auto syscallState = computeSyscallState(f);
+                for(auto it = syscallState.begin(); it != syscallState.end(); ++it)
+                {
+                    for (auto i = it->second.first.begin(); i != it->second.first.end(); i++) {
+                        for (auto j = i->second.begin(); j != i->second.end(); j++) {
+                            insertToMapSets(i->first, Syscall(j->type));
+                        }
+
+                    }
+                }
             }
 //            for (auto &bb : f) {
 //                for (auto &i : bb) {
@@ -193,14 +209,24 @@ namespace autopledge {
 //                }
 //            }
         }
-//        for(auto it = basicBlockToSyscallConstraints.begin(); it != basicBlockToSyscallConstraints.end(); ++it)
-//        {
-//            outs() << it->first->getParent()->getName() << "\t{";
-//            for (auto i = it->second.begin(); i != it->second.end(); i++) {
-//                outs() << i->type << ", ";
-//            }
-//            outs() << "}\n";
-//        }
+        outs() << "basic blocks system call constraints:\n";
+        for(auto it = basicBlockToSyscallConstraints.begin(); it != basicBlockToSyscallConstraints.end(); ++it)
+        {
+            outs() << "bb:" << it->first << ", function:" << it->first->getParent()->getName() << "\t{";
+            for (auto i = it->second.begin(); i != it->second.end(); i++) {
+                outs() << i->type << " ";
+            }
+            outs() << "}\n";
+        }
+        outs() << "\nfunction system call constraints:\n";
+        for(auto it = functionToSyscallConstraints.begin(); it != functionToSyscallConstraints.end(); ++it)
+        {
+            outs() << "function:" << it->first->getName() << "\t{";
+            for (auto i = it->second.begin(); i != it->second.end(); i++) {
+                outs() << i->type << " ";
+            }
+            outs() << "}\n";
+        }
         return true;
     }
 }

@@ -15,7 +15,7 @@ namespace autopledge {
 
         bool runOnModule(llvm::Module& m) override;
 
-        void insertToBBMapSet(llvm::BasicBlock*, autopledge::Syscall);
+        void insertToMapSets(llvm::Instruction*, autopledge::Syscall);
 
         // TODO: make this less hideously unsafe (i.e. shouldn't rely on pointer identity after a cycle)
         std::map<llvm::BasicBlock*, std::set<autopledge::Syscall>> basicBlockToSyscallConstraints;
