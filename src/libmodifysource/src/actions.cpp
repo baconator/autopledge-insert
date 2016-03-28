@@ -14,6 +14,12 @@ namespace autopledge {
         llvm::outs() << "HIT VISIT DECL\n";
         auto funcBody = func->getBody();
         auto sourceCfg = clang::CFG::buildCFG(func, funcBody, &astContext, clang::CFG::BuildOptions());
+        auto visitor = [](const clang::Stmt* statement){
+            llvm::outs() << "Statement: ";
+            statement->dump(llvm::outs());
+            llvm::outs() << "\n";
+        };
+        sourceCfg->VisitBlockStmts(visitor);
 
         state.numFunctions++;
         auto funcName = func->getNameInfo().getName().getAsString();
