@@ -2,17 +2,16 @@ namespace autopledge {
 
     enum SyscallType {
         // TODO: use real types in pledge(2)
-        NOT_SYSCALL,
-        stTemp1,
-        stTemp2,
         UNDEFINED,
-        UNKNOWN
+        UNKNOWN,
+        stTemp1,
+        stTemp2
     };
 
     struct Syscall {
         SyscallType type;
+        Syscall();
         Syscall(SyscallType type);
-        Syscall(llvm::StringRef fName);
         static SyscallType getSyscallType(llvm::StringRef);
     };
 

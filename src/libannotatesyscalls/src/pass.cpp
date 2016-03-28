@@ -72,6 +72,7 @@ namespace autopledge {
         }
     };
 
+
     void meet(StateMap &dest, const StateMap &src) {
         for (auto &kvPair : src) {
             const auto found = dest.find(kvPair.first);
@@ -84,10 +85,10 @@ namespace autopledge {
     }
 
     void transfer(Instruction &i, StateMap &state) {
-        if (auto *li = dyn_cast<LoadInst>(&i)) {
-            state[li] = std::set<autopledge::Syscall>();
-            return;
-        }
+//        if (auto *li = dyn_cast<LoadInst>(&i)) {
+//            state[li] = std::set<autopledge::Syscall>();
+//            return;
+//        }
 
         const CallSite cs{&i};
         const auto *fun = getCalledFunction(cs);
@@ -98,7 +99,7 @@ namespace autopledge {
 
         // Apply the transfer function to the abstract state
         auto syscallType = Syscall::getSyscallType(fun->getName());
-        if (syscallType != SyscallType::NOT_SYSCALL) {
+        if (syscallType != SyscallType::UNKNOWN) {
             state[&i].insert(Syscall(syscallType));
         } else {
             // need the callgraph here...
@@ -158,14 +159,16 @@ namespace autopledge {
         }
         for(auto it = abstractState.begin(); it != abstractState.end(); ++it)
         {
-            outs() << "i:" << it->first << ", bb:" << it->first->getParent() << ", f:" << it->first->getParent()->getParent()->getName() << "\t{";
+            outs() << "i:" << it->first << ", bb:" << it->first->getParent() << ", f:" << it->first->getParent()->getParent()->getName() << "\t";
             for (auto i = it->second.first.begin(); i != it->second.first.end(); i++) {
+                outs() << "i:" << i->first << "{";
                 for (auto j = i->second.begin(); j != i->second.end(); j++) {
                     outs() << j->type << ", ";
                 }
+                outs() << "}";
 
             }
-            outs() << "}\n";
+            outs() << "\n";
         }
         return abstractState;
     }
