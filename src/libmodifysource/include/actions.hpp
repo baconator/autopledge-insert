@@ -8,8 +8,10 @@
 
 namespace autopledge {
     struct InsertPledgesState {
-        InsertPledgesState(const InsertPledgesState& o) = delete;
-        InsertPledgesState(){}
+        InsertPledgesState(const InsertPledgesState &o) = delete;
+
+        InsertPledgesState() { }
+
         clang::Rewriter rewriter;
         int numFunctions = 0;
     };
@@ -22,7 +24,7 @@ namespace autopledge {
         virtual bool VisitStmt(clang::Stmt *st);
 
     private:
-        clang::ASTContext& astContext;
+        clang::ASTContext &astContext;
         InsertPledgesState &state;
     };
 
@@ -38,7 +40,8 @@ namespace autopledge {
 
     struct InsertPledges : public clang::ASTFrontendAction {
         InsertPledges(InsertPledgesState &result);
-        virtual std::unique_ptr <clang::ASTConsumer> CreateASTConsumer(clang::CompilerInstance& CI, StringRef file);
+
+        virtual std::unique_ptr<clang::ASTConsumer> CreateASTConsumer(clang::CompilerInstance &CI, StringRef file);
 
     private:
         InsertPledgesState &state;

@@ -14,7 +14,7 @@ namespace autopledge {
         llvm::outs() << "HIT VISIT DECL\n";
         auto funcBody = func->getBody();
         auto sourceCfg = clang::CFG::buildCFG(func, funcBody, &astContext, clang::CFG::BuildOptions());
-        auto visitor = [](const clang::Stmt* statement){
+        auto visitor = [](const clang::Stmt *statement) {
             llvm::outs() << "Statement: ";
             statement->dump(llvm::outs());
             llvm::outs() << "\n";
@@ -56,7 +56,7 @@ namespace autopledge {
     }
 
     std::unique_ptr<clang::ASTConsumer> InsertPledges::CreateASTConsumer(clang::CompilerInstance &CI,
-                                                                                 StringRef file) {
+                                                                         StringRef file) {
         llvm::outs() << "HIT AN EXAMPLE FRONTEND ACTION\n";
         return std::make_unique<autopledge::InsertPledgesConsumer>(&CI, state); // pass CI pointer to ASTConsumer
     }
