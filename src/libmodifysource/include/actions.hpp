@@ -5,6 +5,8 @@
 #include <clang/Rewrite/Core/Rewriter.h>
 #include <clang/AST/RecursiveASTVisitor.h>
 #include <clang/Analysis/CFG.h>
+#include <map>
+#include <syscall.hpp>
 
 namespace autopledge {
     struct InsertPledgesState {
@@ -14,6 +16,7 @@ namespace autopledge {
 
         clang::Rewriter rewriter;
         int numFunctions = 0;
+        std::map<clang::CFGBlock*, autopledge::Syscall> asdf;
     };
 
     struct InsertPledgesVisitor : public clang::RecursiveASTVisitor<InsertPledgesVisitor> {

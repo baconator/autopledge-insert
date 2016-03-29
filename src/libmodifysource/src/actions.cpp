@@ -16,7 +16,7 @@ namespace autopledge {
         auto sourceCfg = clang::CFG::buildCFG(func, funcBody, &astContext, clang::CFG::BuildOptions());
         auto &root = sourceCfg->getEntry();
         for (auto successor = root.succ_begin(); successor < root.succ_end(); successor = std::next(successor)) {
-            
+
         }
 
         state.numFunctions++;
